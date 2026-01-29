@@ -186,7 +186,7 @@ export default function ChatInterface({ socket, selectedDevice, myDeviceName, on
     if (!transfer.chunks || transfer.chunks.length === 0) return;
 
     // Combine all chunks
-    const totalSize = transfer.chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+    const totalSize = transfer.chunks.reduce((sum, chunk) => sum + chunk.byteLength, 0);
     const combinedArray = new Uint8Array(totalSize);
     let offset = 0;
 
