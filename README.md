@@ -169,7 +169,7 @@ const chunkSize = 1024 * 1024; // 1MB (adjust as needed)
 
 ## License
 
-MIT
+[GPL-2.0 license](LICENSE.txt)
 
 ## Contributing
 
