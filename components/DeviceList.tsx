@@ -71,8 +71,8 @@ export default function DeviceList({ devices, onDeviceSelect, isConnected }: Dev
         <h3 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">How to use:</h3>
         <ul className="list-disc list-inside text-blue-800 space-y-1 text-xs sm:text-sm">
           <li>Make sure all devices are on the same local network</li>
-          <li>Share your device name verbally with others so they can identify you</li>
-          <li>Select a device to start chatting and sharing files</li>
+          <li>Share your device name displayed above with others so they can identify you</li>
+          <li>Select the device to start chatting and sharing files</li>
           <li>Messages are not stored - they will disappear on page reload</li>
         </ul>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getDeviceName } from '@/lib/deviceName';
 import { Device } from '@/types';
 import DeviceList from '@/components/DeviceList';
@@ -136,8 +137,17 @@ export default function Home() {
           <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="text-center sm:text-left">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
-                  LocalFile
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
+                  <Image 
+                    src="/icons/LocalFIle.png" 
+                    alt="LocalFile Logo" 
+                    className="w-8 h-8 sm:w-10 sm:h-10"
+                    width={40}
+                    height={40}
+                  />
+                  <span>
+                    <span className="text-indigo-950">Local</span><span className='text-[#63CEA1]'>File</span>
+                  </span>
                 </h1>
                 <p className="text-gray-600 text-sm sm:text-base">
                   P2P file sharing and messaging on your local network
