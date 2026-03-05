@@ -67,7 +67,7 @@ export class WebRTCManager {
 
   // Register this device in Firebase
   private async registerDevice() {
-    const deviceRef = ref(this.database, `devices/${this.myDeviceId}`);
+    const deviceRef = ref(this.database, `localfile/app/devices/${this.myDeviceId}`);
     await set(deviceRef, {
       name: this.myDeviceName,
       timestamp: Date.now()
@@ -79,7 +79,7 @@ export class WebRTCManager {
 
   // Listen for other devices
   private listenForDevices() {
-    const devicesRef = ref(this.database, 'devices');
+    const devicesRef = ref(this.database, 'localfile/app/devices');
     onValue(devicesRef, (snapshot) => {
       const devices: Device[] = [];
       snapshot.forEach((childSnapshot) => {
@@ -100,7 +100,7 @@ export class WebRTCManager {
 
   // Listen for WebRTC signaling messages
   private listenForSignals() {
-    const signalRef = ref(this.database, `signals/${this.myDeviceId}`);
+    const signalRef = ref(this.database, `localfile/app/signals/${this.myDeviceId}`);
     onValue(signalRef, async (snapshot) => {
       const signals: Array<{ key: string; value: SignalData }> = [];
       snapshot.forEach((childSnapshot) => {
@@ -115,7 +115,7 @@ export class WebRTCManager {
         if (value && value.from && value.type) {
           await this.handleSignal(value);
           // Remove processed signal
-          remove(ref(this.database, `signals/${this.myDeviceId}/${key}`));
+          remove(ref(this.database, `localfile/app/signals/${this.myDeviceId}/${key}`));
         }
       }
     });
@@ -169,7 +169,7 @@ export class WebRTCManager {
       const maxAge = 10 * 60 * 1000; // 10 minutes
 
       // Clean up old device records
-      const devicesRef = ref(this.database, 'devices');
+      const devicesRef = ref(this.database, 'localfile/app/devices');
       const devicesSnapshot = await get(devicesRef);
       if (devicesSnapshot.exists()) {
         const devices = devicesSnapshot.val();
@@ -178,14 +178,14 @@ export class WebRTCManager {
             const deviceTimestamp = (deviceData as DeviceData).timestamp;
             if (now - deviceTimestamp > maxAge) {
               console.log(`Removing old device: ${deviceId}`);
-              await remove(ref(this.database, `devices/${deviceId}`));
+              await remove(ref(this.database, `localfile/app/devices/${deviceId}`));
             }
           }
         }
       }
 
       // Clean up old signaling messages
-      const signalsRef = ref(this.database, `signals/${this.myDeviceId}`);
+      const signalsRef = ref(this.database, `localfile/app/signals/${this.myDeviceId}`);
       const signalsSnapshot = await get(signalsRef);
       if (signalsSnapshot.exists()) {
         const signals = signalsSnapshot.val();
@@ -194,7 +194,7 @@ export class WebRTCManager {
             const signalTimestamp = (signalData as SignalData).timestamp;
             if (now - signalTimestamp > maxAge) {
               console.log(`Removing old signal: ${signalId}`);
-              await remove(ref(this.database, `signals/${this.myDeviceId}/${signalId}`));
+              await remove(ref(this.database, `localfile/app/signals/${this.myDeviceId}/${signalId}`));
             }
           }
         }
@@ -506,7 +506,7 @@ export class WebRTCManager {
 
   // Send signaling message via Firebase
   private async sendSignal(to: string, type: string, data: RTCSessionDescriptionInit | RTCIceCandidateInit) {
-    const signalRef = ref(this.database, `signals/${to}`);
+    const signalRef = ref(this.database, `localfile/app/signals/${to}`);
     await push(signalRef, {
       from: this.myDeviceId,
       type,
@@ -672,6 +672,6 @@ export class WebRTCManager {
     this.dataChannels.clear();
 
     // Remove device from Firebase
-    remove(ref(this.database, `devices/${this.myDeviceId}`));
+    remove(ref(this.database, `localfile/app/devices/${this.myDeviceId}`));
   }
 }
