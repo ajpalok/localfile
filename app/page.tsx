@@ -82,30 +82,34 @@ export default function Home() {
     setIsMounted(true);
     setMyDeviceName(getDeviceName());
 
-    // Initialize Firebase and WebRTC
-    try {
-      const { database } = initFirebase();
-      const manager = new WebRTCManager(database, deviceId, getDeviceName());
+    // Initialize Firebase (with anonymous auth) then WebRTC
+    const init = async () => {
+      try {
+        const { database } = await initFirebase();
+        const manager = new WebRTCManager(database, deviceId, getDeviceName());
 
-      // Set up callbacks
-      manager.onDeviceList((deviceList) => {
-        console.log('Device list updated:', deviceList);
-        setDevices(deviceList);
-        setIsConnected(true);
-        setConnectionStatus('connected');
-        
-        // If selected device is no longer in the list, deselect it
-        if (selectedDevice && !deviceList.find((d: Device) => d.id === selectedDevice.id)) {
-          setSelectedDevice(null);
-        }
-      });
+        // Set up callbacks
+        manager.onDeviceList((deviceList) => {
+          console.log('Device list updated:', deviceList);
+          setDevices(deviceList);
+          setIsConnected(true);
+          setConnectionStatus('connected');
+          
+          // If selected device is no longer in the list, deselect it
+          if (selectedDevice && !deviceList.find((d: Device) => d.id === selectedDevice.id)) {
+            setSelectedDevice(null);
+          }
+        });
 
-      setWebrtcManager(manager); // eslint-disable-line react-hooks/set-state-in-effect
-      console.log('WebRTC Manager initialized');
-    } catch (error) {
-      console.error('Error initializing Firebase/WebRTC:', error);
-      setConnectionStatus('disconnected');
-    }
+        setWebrtcManager(manager); // eslint-disable-line react-hooks/set-state-in-effect
+        console.log('WebRTC Manager initialized');
+      } catch (error) {
+        console.error('Error initializing Firebase/WebRTC:', error);
+        setConnectionStatus('disconnected');
+      }
+    };
+
+    init();
 
     return () => {
       if (webrtcManager) {
